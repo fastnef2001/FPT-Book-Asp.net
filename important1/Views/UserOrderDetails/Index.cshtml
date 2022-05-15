@@ -1,44 +1,73 @@
 ﻿@model IEnumerable<important1.Models.OrderDetail>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Detail";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Quantity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsbnNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Order)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsbnNavigation.Isbn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Order.OrderId)
-            </td>
-          
-        </tr>
-}
-    </tbody>
-</table>
+<div class="container">
+    <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+        <a asp-area="" asp-controller="UserBooks" asp-action="Index" class="stext-109 cl8 hov-cl1 trans-04">
+            Home
+            <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+        </a>
+
+        <a asp-area="" asp-controller="UserCarts" asp-action="Index" class="stext-109 cl8 hov-cl1 trans-04">
+            Cart
+            <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+        </a>
+        <a asp-area="" asp-controller="UserOrders" asp-action="Index" class="stext-109 cl8 hov-cl1 trans-04">
+            Order history
+            <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+        </a>
+        <span class="stext-109 cl4">
+            @ViewData["Title"]
+        </span>
+    </div>
+</div>
+
+
+<!-- Shoping Cart -->
+<form class="bg0 p-t-75 p-b-85>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-xl-8 m-lr-auto m-b-50">
+                <div class="m-l-25 m-r--38 m-lr-0-xl">
+                    <div class="wrap-table-shopping-cart">
+                        <table class="table-shopping-cart">
+                            <tr class="table_head">
+                                <th class="column-1">@Html.DisplayNameFor(model => model.IsbnNavigation.Title)</th>
+                                <th class="column-1"></th>
+                                <th class="column-1" style="text-align:center">Quantity</th>
+                                <th class="column-1">Price</th>
+                                <th class="column-1">Total</th>
+                            </tr>
+                        @foreach (var item in Model)
+                        {
+                                <tr class="table">
+                                    <td class="column-1">
+                                        <div class="how-itemcart1">
+                                            <img src="@("~/img/" + item.IsbnNavigation.Thumb)" asp-append-version="true" style="max-width: 60px" alt="">
+                                        </div>
+                                    </td>
+                                    <td class="column-1">@item.IsbnNavigation.Title</td>
+                                    <td class="column-1" style="text-align:center;">@item.Quantity</td>
+                                    <td class="column-1">@item.IsbnNavigation.Price</td>
+                                    <td class="column-1">
+                                    @(item.Quantity * item.IsbnNavigation.Price)
+                                    </td>
+                                </tr>
+                        }
+                        </table>
+                        <div class=" bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
+                            <div class="text-right ">
+                                <h4> Tổng tiền: @Model.Sum(c => c.IsbnNavigation.Price * c.Quantity) </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

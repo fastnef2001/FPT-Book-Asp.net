@@ -1,47 +1,60 @@
 ﻿@model IEnumerable<important1.Models.Order>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Order history";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<div class="container">
+    <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+        <a asp-area="" asp-controller="UserBooks" asp-action="Index" class="stext-109 cl8 hov-cl1 trans-04">
+            Home
+            <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+        </a>
 
-<h1>Index</h1>
+        <a asp-area="" asp-controller="UserCarts" asp-action="Index" class="stext-109 cl8 hov-cl1 trans-04">
+           Cart
+             <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+        </a>
+         <span class="stext-109 cl4">
+            @ViewData["Title"]
+        </span>
+       
+    </div>
+</div>
+<form class="bg0 p-t-75 p-b-85>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-xl-8 m-lr-auto m-b-50">
+                <div class="m-l-25 m-r--38 m-lr-0-xl">
+                    <div class="wrap-table-shopping-cart">
+                        <table class="table-shopping-cart">
+                            <tr class="table_head">
+                                <th class="column-1">@Html.DisplayNameFor(model => model.OrderId)</th>
+                                <th class="column-1">@Html.DisplayNameFor(model => model.Total)</th>
+                                <th class="column-1">@Html.DisplayNameFor(model => model.OrderDate)</th>
+                                <th class="column-1"></th>
+                            </tr>
+                        @foreach (var item in Model)
+                        {
+                                <tr class="table">
+                                    <td class="column-1">@Html.DisplayFor(modelItem => item.OrderId)</td>
+                                    <td class="column-1">@Html.DisplayFor(modelItem => item.Total)</td>
+                                    <td class="column-1">@Html.DisplayFor(modelItem => item.OrderDate)</td>
+                                    <td class="text-right">
+                                        <a class="btn btn-icon btn-hover btn-sm btn-rounded pull-right" asp-area="" asp-controller="UserOrderDetails" asp-action="Index" asp-route-id="@item.OrderId">
+                                            <i class="anticon anticon-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                        }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdNavigation)
-            </th>       
-            <th>
-                @Html.DisplayNameFor(model => model.Total)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OrderDate)
-            </th>
-            
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-             <td>
-                @Html.DisplayFor(modelItem => item.IdNavigation.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Total)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderDate)
-            </td>
-           
-            <td>
-                
-                <a asp-area="" asp-controller="UserOrderDetails" asp-action="Index" asp-route-id="@item.OrderId">Details</a>
-                
-        </tr>
-}
-    </tbody>
-</table>
+
+

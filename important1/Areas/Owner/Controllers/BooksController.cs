@@ -19,7 +19,7 @@ namespace important1.Areas.Owner.Controllers
     [Authorize(Roles = "Seller")]
     public class BooksController : Controller
     {
-        private readonly int _recordsPerPage = 5;
+        private readonly int _recordsPerPage = 2;
         private readonly UserContext _context;
         private readonly UserManager<important1User> _userManager;
 
