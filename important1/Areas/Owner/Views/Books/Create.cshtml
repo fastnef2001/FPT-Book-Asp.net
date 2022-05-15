@@ -1,0 +1,127 @@
+﻿@model important1.Models.Book
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Owner/Views/Shared/_OwnerLayout.cshtml";
+}
+
+
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a asp-area="Owner" asp-controller="Home" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+            <a asp-area="Owner" asp-controller="Books" asp-action="Index" class="breadcrumb-item">Books list</a>
+            <span class="breadcrumb-item active">@ViewData["Title"] </span>
+        </nav>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row m-b-30">
+
+                <div class="col-lg-12 text-right">
+                    <div class="form-group text-right">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                    </div>
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#product-edit-basic">Basic Info</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#product-edit-description">Description</a>
+                        </li>
+                    </ul>
+                </div>
+               
+            </div>
+
+            <div class="tab-content m-t-15">
+                <div class="tab-pane fade active show" id="product-edit-basic">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label class="font-weight-semibold" asp-for="Isbn" class="control-label"></label>
+                                    <input type="text" asp-for="Isbn" class="form-control" />
+                                    <span asp-validation-for="Isbn" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="font-weight-semibold" asp-for="Title" class="control-label"></label>
+                                    <input type="text" asp-for="Title" class="form-control" />
+                                    <span asp-validation-for="Title" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label class="font-weight-semibold" asp-for="CategoryId" class="control-label"></label>
+                                    <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="font-weight-semibold" asp-for="Author" class="control-label"></label>
+                                    <input type="text" asp-for="Author" class="form-control" />
+                                    <span asp-validation-for="Author" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label class="font-weight-semibold" asp-for="Page" class="control-label"></label>
+                                    <input type="number" asp-for="Page" class="form-control" />
+                                    <span asp-validation-for="Page" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="font-weight-semibold" asp-for="Price" class="control-label"></label>
+                                    <input type="number" asp-for="Price" class="form-control" />
+                                    <span asp-validation-for="Price" class="text-danger"></span>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="font-weight-semibold" class="control-label"></label>
+                                <input name="image" type="file" class="form-control-file" />
+                            </div>
+                            <div class="form-group" >
+                                <label class="font-weight-semibold" asp-for="Id" class="control-label" ></label>
+                                <p>@ViewBag.Id</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="product-edit-description">
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="productDescription" class="ql-container ql-snow">
+                                <input asp-for="Descr" class="form-control" />
+                                <span asp-validation-for="Descr" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </form>
+
+
+
+    </div>
+</div>
+
+
+
+
+
+
+@section Scripts {
+
+<script src="~/Adminassets/vendors/quill/quill.min.js"></script>
+}
+
+

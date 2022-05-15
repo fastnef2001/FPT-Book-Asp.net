@@ -1,0 +1,249 @@
+﻿@model IEnumerable<important1.Models.Book>
+
+
+@{
+    int CurrentPage = ViewBag.CurrentPage;
+    ViewData["Title"] = "Danh sách sách";
+    Layout = "~/Areas/Owner/Views/Shared/_OwnerLayout.cshtml";
+}
+
+
+
+
+
+
+
+<!-- Content Wrapper START -->
+
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a asp-area="Owner" asp-controller="Books" asp-action="Index"class="breadcrumb-item active">@ViewData["Title"] : Trang @(CurrentPage +1) </a>
+        </nav>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="row m-b-30">
+            <div class="col-lg-8">
+                <div class="d-md-flex">
+                    <div class="m-b-10 m-r-15">
+
+                        <form asp-action="Index" method="get">
+                            <select asp-items="ViewBag.CategoryId" type="number" name="categoryInt" value="@ViewData["CurrentCate"]" class="custom-select" style="min-width: 100%;">
+                                <option disable selected value="all">All</option>
+                            </select>
+                             <input type="submit" value="Filter" class="btn btn-primary mt-3" style="min-width: 100%;" asp-route-id="0" asp-route-categoryInt="@ViewData["CurrentCate"]" />
+                        </form>
+
+                    </div>
+
+                 
+                        <div class="m-b-10">
+                            <form asp-action="Index" method="get">
+                             <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control" style="min-width: 100%;" placeholder="Search"/>
+                            <input type="submit" value="Search" class="btn btn-primary mt-3" asp-route-id="0" asp-route-searchString="@ViewData["CurrentFilter"]" style="min-width: 100%;" />
+                         </form>
+                        </div>
+                   
+                </div>
+            </div>
+            <div class="col-lg-4 text-right">
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="anticon anticon-plus-circle m-r-5"></i>
+                    <span>Add Product</span>
+                </a>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover e-commerce-table">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Isbn)</th>
+                        <th>@Html.DisplayNameFor(model => model.Title)</th>
+                        <th>@Html.DisplayNameFor(model => model.CategoryId)</th>
+                        <th>@Html.DisplayNameFor(model => model.Author)</th>
+                        <th>@Html.DisplayNameFor(model => model.Page)</th>
+                        <th>@Html.DisplayNameFor(model => model.Price)</th>
+
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Isbn</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="@("~/img/" + item.Thumb)" asp-append-version="true" style="max-width: 60px" alt="">
+                                        <h6 class="m-b-0 m-l-10">@item.Title</h6>
+                                    </div>
+                                </td>
+                                <td>@item.Category!.Name</td>
+                                <td>@item.Author</td>
+                                <td>@item.Page</td>
+                                <td>@item.Price VND</td>
+
+                                <td>
+                                    @item.IdNavigation!.UserName
+                                </td>
+                                <td class="text-right">
+                                    <a asp-action="Edit" asp-route-id="@item.Isbn">
+                                        <button class="btn btn-icon btn-hover btn-sm btn-rounded pull-right">
+                                            <i class="anticon anticon-edit"></i>
+                                        </button>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Isbn">
+                                        <button class="btn btn-icon btn-hover btn-sm btn-rounded">
+                                            <i class="anticon anticon-delete"></i>
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+
+
+
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    @for (var i = 0; i < ViewBag.NumberOfPages; i++)
+                    {
+                        var style = (ViewBag.CurrentPage == @i) ? "active" : "";
+                        <li class="page-item @style" aria-current="page">
+                            <a class="page-link" asp-action="Index"
+                           asp-route-id="@i"
+                           asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-categoryInt="@ViewData["CurrentCate"]">
+                                @(i+1)
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+</div>
+
+<!-- Content Wrapper END -->
+<!-- Quick View START -->
+<div class="modal modal-right fade quick-view" id="quick-view">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header justify-content-between align-items-center">
+                <h5 class="modal-title">Theme Config</h5>
+            </div>
+            <div class="modal-body scrollable">
+                <div class="m-b-30">
+                    <h5 class="m-b-0">Header Color</h5>
+                    <p>Config header background color</p>
+                    <div class="theme-configurator d-flex m-t-10">
+                        <div class="radio">
+                            <input id="header-default" name="header-theme" type="radio" checked value="default">
+                            <label for="header-default"></label>
+                        </div>
+                        <div class="radio">
+                            <input id="header-primary" name="header-theme" type="radio" value="primary">
+                            <label for="header-primary"></label>
+                        </div>
+                        <div class="radio">
+                            <input id="header-success" name="header-theme" type="radio" value="success">
+                            <label for="header-success"></label>
+                        </div>
+                        <div class="radio">
+                            <input id="header-secondary" name="header-theme" type="radio" value="secondary">
+                            <label for="header-secondary"></label>
+                        </div>
+                        <div class="radio">
+                            <input id="header-danger" name="header-theme" type="radio" value="danger">
+                            <label for="header-danger"></label>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div>
+                    <h5 class="m-b-0">Side Nav Dark</h5>
+                    <p>Change Side Nav to dark</p>
+                    <div class="switch d-inline">
+                        <input type="checkbox" name="side-nav-theme-toogle" id="side-nav-theme-toogle">
+                        <label for="side-nav-theme-toogle"></label>
+                    </div>
+                </div>
+                <hr>
+                <div>
+                    <h5 class="m-b-0">Folded Menu</h5>
+                    <p>Toggle Folded Menu</p>
+                    <div class="switch d-inline">
+                        <input type="checkbox" name="side-nav-fold-toogle" id="side-nav-fold-toogle">
+                        <label for="side-nav-fold-toogle"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Quick View END -->
+
+
+
+        <div class="card">
+
+            <div class="card-body">
+
+                <div class="row m-b-30 isotope-gridisotope-grid">
+
+                    <div class="col-sm-8 col-md-4 col-lg-3 border ">
+                        <form asp-action="Index" method="get" style="hight=100%">
+                            <div>
+                                <p>
+                                    <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" />
+                                    <input type="submit" value="Search" class="btn btn-default" asp-route-id="0" asp-route-searchString="@ViewData["CurrentFilter"]" />
+
+
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                    <br />
+                    <div class="col-sm-8 col-md-4 col-lg-3  border ">
+                        <form asp-action="Index" method="get">
+                            <div>
+                                <p>
+
+                                    <select asp-items="ViewBag.CategoryId" type="number" name="categoryInt" value="@ViewData["CurrentCate"]"> <option disable selected value="all">All</option></select>
+                                    <input type="submit" value="Filter" class="btn btn-default" asp-route-id="0" asp-route-categoryInt="@ViewData["CurrentCate"]" />
+
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                    <br />
+                    <div class="col-sm-4 col-md-4 col-lg-3 border ">
+                        <p>
+                            <a class="btn btn-default" asp-action="Index">Back to Full List</a>
+                        </p>
+
+                    </div>
+                    <br />
+                    <div class="col-sm-4 col-md-4 col-lg-3  text-right border ">
+                        <a asp-action="Create">
+                            <button class="btn btn-primary">
+                                <i class="anticon anticon-plus-circle m-r-5"></i>
+                                <span>Add Product</span>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+
+

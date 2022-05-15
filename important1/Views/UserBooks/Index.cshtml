@@ -1,0 +1,262 @@
+﻿@model IEnumerable<important1.Models.Book>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<!-- Product -->
+<div class="bg0 m-t-23 p-b-140">
+    <div class="container">
+        <div class="flex-w flex-sb-m p-b-52">
+            <div class="flex-w flex-l-m filter-tope-group m-tb-10">
+          
+            </div>
+
+            <div class="flex-w flex-c-m m-tb-10">
+                <div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter">
+                    <i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
+                    <i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
+                    Filter
+                </div>
+
+
+
+                <div class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-search">
+                    <i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
+                    <i class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
+                    Search
+                </div>
+
+                <a class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4" asp-action="Index">
+                    Back
+                </a>
+            </div>
+
+            <!-- Search product -->
+
+            <form class="dis-none panel-search w-full p-t-10 p-b-15 ">
+                <div class="bor8 dis-flex p-l-15">
+                    <button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04" type="submit" value="Search" asp-route-id="0" asp-route-searchString="@ViewData["CurrentFilter"]">
+                        <i class="zmdi zmdi-search"></i>
+                    </button>
+
+                    <input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="searchString" value="@ViewData["CurrentFilter"]" placeholder="Search">
+                </div>
+            </form>
+
+
+            <!-- Filter -->
+   
+
+            <div class="dis-none panel-filter w-full p-t-10 p-b-15">
+                <div class=" bor8  w-full p-lr-20 p-t-20 p-lr-15-sm">
+                    <div class="filter-col1 p-r-15 p-b-27">
+                        <form asp-action="Index" method="get">
+                            <div>
+                                <select class="mtext-107 cl2 size-105 plh1=2 " asp-items="ViewBag.CategoryId" type="number" name="categoryInt" value="@ViewData["CurrentCate"]"></select>
+                                <input type="submit" value="Filter" class="btn btn-default bg-info text-white p-t-12 " asp-route-id="0" asp-route-categoryInt="@ViewData["CurrentCate"]" />
+                            </div>
+                        </form>
+
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row isotope-grid">
+            @foreach (var item in Model)
+            {
+                <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
+                    <!-- Block2 -->
+                <div class="block2">
+                        <div class="block2-pic hov-img0">
+                            <img src="@("~/img/" + item.Thumb)" asp-append-version="true" style="max-width: 260px">
+
+
+                            <a asp-controller="UserBooks" asp-action="Details" asp-route-id="@item.Isbn" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
+                                Quick View
+                            </a>
+
+                        </div>
+
+                        <div class="block2-txt flex-w flex-t p-t-14">
+                            <div class="block2-txt-child1 flex-col-l ">
+                                <a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                                    @item.Title
+                                </a>
+
+                                <span class="stext-105 cl3">
+                                    @item.Price VND
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+        <div id="pagination"></div>
+
+
+        <!-- pagination -->
+  <div class="row">
+    <!-- hiển thị phân trang nếu có trang -->
+    @if( ViewBag.NumberOfPages > 0) { 
+    <nav class="mx-auto">
+      <ul class="pagination" style="margin-top: 2rem;">
+      
+        <!-- FIRST ITEM -->  
+        @if(ViewBag.currentPage == 0) {
+     @* // Nếu thông số http://localhost:3333/news/1/ là 1 thì First sẽ bị disabled*@
+            <li class="page-item disabled">
+              <a class="page-link" href="/">First</a>
+            </li>
+        } else {
+     @*   // Nếu thông số http://localhost:3333/news/2/ từ 2 trở lên thì First sẽ bỏ disabled*@
+            <li class="page-item">
+              <a class="page-link" href="/">First</a>
+            </li>
+        }
+        
+        <!-- ITEMS  -->
+        @{
+              var i = (ViewBag.currentPage > 3 ? ViewBag.currentPage - 2 : 0);
+        }
+      
+  @*// Toán tử điều kiện 3 ngôi syntax: < điều_kiện ? giá_trị_1 : giá_trị_2 >
+ // Nếu điều_kiện trả về true, toán tử có giá trị giá_trị_1. Ngược lại toán tử có giá trị giá_trị_2.*@
+        @if(i != 0) {
+            <li class="page-item disabled">
+              <a class="page-link" href="#">...</a>
+            </li>
+        }
+        @for(; i <= (ViewBag.currentPage + 2) && i < ViewBag.NumberOfPages; i++) {
+
+
+
+       @* // Sử dụng vòng lặp để lặp qua từng trang và tăng số trang 
+        // Trong vòng lặp for có ba biểu thức tùy chọn nên chỉ cần các bạn tách mỗi biểu thức bằng dấu `;` là oke rồi*@
+          @if(i == ViewBag.currentPage) {
+            <li class="page-item active">
+              <a class="page-link" asp-action="Index"
+                           asp-route-id="@i"
+                           asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-categoryInt="@ViewData["CurrentCate"]" class="page-link">
+                 @(i+1)
+              </a>
+            </li>
+        } else {
+            <li class="page-item">
+              <a class="page-link" asp-action="Index"
+                           asp-route-id="@i"
+                           asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-categoryInt="@ViewData["CurrentCate"]" class="page-link">
+                @(i + 1) 
+              </a>
+            </li>
+        }
+        @if (i == ViewBag.currentPage + 2 && i < ViewBag.NumberOfPages) {
+            <li class="page-item disabled">
+              <a class="page-link" href="#">...</a>
+            </li>
+        }
+        }
+        
+        <!-- LAST ITEM -->
+        @if(ViewBag.currentPage == ViewBag.NumberOfPages-1) {
+      @* // Nếu số current( chỉ số phân trang ) là 6 và tổng số page là 6 thì Last bị disabled*@
+            <li class="page-item disabled">
+              <a class="page-link" href="#">
+                Last
+              </a>
+            </li>
+        } else {
+       @* // Ngược lại, thì Last là trang cuối cùng pages ở đây là 6 đồng nghĩa với Last là trang số 6*@
+            <li class="page-item">
+              <a class="page-link" asp-action="Index"
+                           asp-route-id="@(ViewBag.NumberOfPages-1)"
+                           asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-categoryInt="@ViewData["CurrentCate"]" class="page-link">
+                Last
+              </a>
+            </li>
+        }
+      </ul>
+    </nav>
+    }
+  </div>
+
+
+        @*   <div id="pagination">
+            @if (ViewBag.NumberOfPages > 0)
+            {
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        @if (ViewBag.CurrentPage == 0)
+                        {
+                            <li class="page-item disabled">
+                                <a class="page-link" href="">
+                                    First
+                                </a>
+
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="/UserBooks/Index" aria-label="Previous">
+                                    First
+                                </a>
+                            </li>
+                        }
+                        @{
+                            var i = (ViewBag.currentPage > 4 ? ViewBag.currentPage - 2 : 1);
+                        }
+
+                        @if (i != 1)
+                        {
+                            <li class="page-item disabled">
+                                <a class="page-link">
+
+                                </a>
+                            </li>
+                        }
+                        @for (; i <= ViewBag.NumberOfPages && i <= ViewBag.currentPage + 4; i++)
+                        {
+                            var style = (ViewBag.CurrentPage == @i) ? "active" : "";
+                            <li class="page-item @style" aria-current="page">
+                                <a asp-action="Index"
+                           asp-route-id="@i"
+                           asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-categoryInt="@ViewData["CurrentCate"]" class="page-link">
+                                    @(i)
+                                </a>
+                            </li>
+                            @if (i == ViewBag.currentPage + 4 && i < ViewBag.NumberOfPages)
+                            {
+                                <li class="page-item disabled">
+                                    <a class="page-link"></a>
+                                </li>
+                            }
+                        }
+                        @if (ViewBag.currentPage == ViewBag.NumberOfPages)
+                        {
+                            <li class="page-item disabled">
+                                <a class="page-link" href="">
+                                    Last
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            }
+        </div>*@
+
+    </div>
+</div>
+
+

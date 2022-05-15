@@ -1,0 +1,96 @@
+﻿@model important1.Models.Book
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Areas/Owner/Views/Shared/_OwnerLayout.cshtml";
+}
+
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a asp-area="Owner" asp-controller="Home" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+            <a asp-area="Owner" asp-controller="Books" asp-action="Index" class="breadcrumb-item">Books list</a>
+            <span class="breadcrumb-item active">@ViewData["Title"] </span>
+        </nav>
+    </div>
+</div>
+
+<h3>Are you sure you want to delete this book?</h3>
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Delete">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="d-md-flex m-b-15 align-items-center justify-content-between">
+                <div class="media align-items-center m-b-15">
+                    <div>
+                        <img src="@("~/img/" + Model.Thumb)" asp-append-version="true" style="max-width: 200px" alt="">
+
+                    </div>
+                    
+                </div>
+                <form asp-action="Delete" class="m-b-15 btn btn-primary">
+                    <input type="hidden" asp-for="Isbn" />
+                    <input type="submit" value="Delete" class="btn btn-danger" />
+                </form>
+               
+            </div>
+            <div>
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Category)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Category.Name)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Author)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Author)
+        </dd>
+
+         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+        
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Page)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Page)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Descr)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Descr)
+        </dd>
+        
+      
+        
+        
+        
+    </dl>
+
+
+</div>
+
+        </form>
+    </div>
+</div>
+
+

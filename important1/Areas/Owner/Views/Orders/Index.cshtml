@@ -1,0 +1,108 @@
+﻿@model IEnumerable<important1.Models.Order>
+
+@{
+     int CurrentPage = ViewBag.CurrentPage;
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Owner/Views/Shared/_OwnerLayout.cshtml";
+}
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a asp-area="Owner" asp-controller="Books" asp-action="Index"class="breadcrumb-item active">@ViewData["Title"] : Trang @(CurrentPage +1) </a>
+        </nav>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="row m-b-30">
+            <div class="col-lg-8">
+                <div class="d-md-flex">
+                    <div class="m-b-10 m-r-15">
+
+                        <form asp-action="Index" method="get">
+                            <select asp-items="ViewBag.CategoryId" type="number" name="categoryInt" value="@ViewData["CurrentCate"]" class="custom-select" style="min-width: 100%;">
+                                <option disable selected value="all">All</option>
+                            </select>
+                            <input type="submit" value="Filter" class="btn btn-primary mt-3" style="min-width: 100%;" asp-route-id="0" asp-route-searchString="@ViewData["CurrentCate"]" />
+                        </form>
+
+                    </div>
+
+
+                    <div class="m-b-10">
+                        <form asp-action="Index" method="get">
+                            <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control" style="min-width: 100%;" placeholder="Search" />
+                            <input type="submit" value="Search" class="btn btn-primary mt-3" asp-route-id="0" asp-route-searchString="@ViewData["CurrentFilter"]" style="min-width: 100%;" />
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+            
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover e-commerce-table">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.OrderId)</th>
+                        <th>@Html.DisplayNameFor(model => model.Id)</th>
+                        <th>@Html.DisplayNameFor(model => model.OrderDate)</th>
+                        <th>@Html.DisplayNameFor(model => model.Total)</th>
+
+
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.OrderId</td>
+
+
+                                <td>@item.IdNavigation.UserName</td>
+                                <td>@item.OrderDate</td>
+                                <td>@item.Total</td>
+
+                                 <td class="text-right">
+                                   
+                                    <a class="btn btn-icon btn-hover btn-sm btn-rounded" asp-controller="OrderDetails" asp-action="Index" asp-route-id="@item.OrderId">
+                
+                                            <i class="anticon anticon-eye"></i>
+                                      
+                                    </a>
+                                </td>
+                                
+
+
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+
+
+
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    @for (var i = 0; i < ViewBag.NumberOfPages; i++)
+                    {
+                        var style = (ViewBag.CurrentPage == @i) ? "active" : "";
+                        <li class="page-item @style" aria-current="page">
+                            <a class="page-link" asp-action="Index"
+                           asp-route-id="@i"
+                           asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-categoryInt="@ViewData["CurrentCate"]">
+                                @(i+1)
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+</div>
+
