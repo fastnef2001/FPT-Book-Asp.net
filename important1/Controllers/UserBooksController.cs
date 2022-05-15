@@ -16,7 +16,7 @@ namespace important1.Controllers
 {
     public class UserBooksController : Controller
     {
-        private readonly int _recordsPerPage = 2;
+        private readonly int _recordsPerPage = 3;
         private readonly UserContext _context;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<UserBooksController> _logger;
