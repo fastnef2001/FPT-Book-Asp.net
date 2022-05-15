@@ -1,14 +1,14 @@
 ﻿@model IEnumerable<important1.Models.Order>
 
 @{
-     int CurrentPage = ViewBag.CurrentPage;
+     
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Owner/Views/Shared/_OwnerLayout.cshtml";
 }
 <div class="page-header">
     <div class="header-sub-title">
         <nav class="breadcrumb breadcrumb-dash">
-            <a asp-area="Owner" asp-controller="Books" asp-action="Index"class="breadcrumb-item active">@ViewData["Title"] : Trang @(CurrentPage +1) </a>
+            <a asp-area="Owner" asp-controller="Books" asp-action="Index"class="breadcrumb-item active">@ViewData["Title"] </a>
         </nav>
     </div>
 </div>

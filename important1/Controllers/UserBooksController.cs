@@ -16,7 +16,7 @@ namespace important1.Controllers
 {
     public class UserBooksController : Controller
     {
-        private readonly int _recordsPerPage = 1;
+        private readonly int _recordsPerPage = 2;
         private readonly UserContext _context;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<UserBooksController> _logger;
@@ -175,9 +175,14 @@ namespace important1.Controllers
                     Order myOrder = new Order();
                     myOrder.Id = thisUserId;
                     myOrder.OrderDate = DateTime.Now;
-                    myOrder.Total = myDetailsInCart.Select(c => c.TotalPerCart)
-                        .Aggregate((c1, c2) => c1 + c2);
-
+                    var Total = 0;
+                    for (int i = 0; i < myDetailsInCart.Count; i++)
+                    {
+                        Total += (myDetailsInCart[i].Book.Price * (int)myDetailsInCart[i].Quantity);
+                    }
+                    /*myOrder.Total = myDetailsInCart.Select(c => c.TotalPerCart)
+                        .Aggregate((c1, c2) => c1 + c2);*/
+                    myOrder.Total = Total;
                     _context.Add(myOrder);
                     await _context.SaveChangesAsync();
 
