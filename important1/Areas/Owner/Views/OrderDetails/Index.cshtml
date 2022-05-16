@@ -1,47 +1,53 @@
 ﻿@model IEnumerable<important1.Models.OrderDetail>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Chi tiết đơn hàng";
     Layout = "~/Areas/Owner/Views/Shared/_OwnerLayout.cshtml";
 }
 
-<h1>Index</h1>
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a asp-area="Owner" asp-controller="Books" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+            <a asp-area="Owner" asp-controller="Orders" asp-action="Index" class="breadcrumb-item">Đơn hàng</a>
+            <span class="breadcrumb-item active">@ViewData["Title"] </span>
+        </nav>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsbnNavigation)
+                    </th>
+                    <th>@Html.DisplayNameFor(model => model.Quantity)</th>
+                    <th>@Html.DisplayNameFor(model => model.IsbnNavigation.Price)</th>
+                    <th>Tổng</th>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-             <th>
-                @Html.DisplayNameFor(model => model.Order)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Quantity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsbnNavigation)
-            </th>
-           
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Order.OrderId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                 <img src="@("~/img/" + item.IsbnNavigation.Thumb)" asp-append-version="true" style="max-width: 60px" alt="">
-                @Html.DisplayFor(modelItem => item.IsbnNavigation.Title)
-            </td>
-            
-    
-        </tr>
-}
-    </tbody>
-</table>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <img src="@("~/img/" + item.IsbnNavigation.Thumb)" asp-append-version="true" style="max-width: 60px" alt="">
+                            @Html.DisplayFor(modelItem => item.IsbnNavigation.Title)
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+                        <td>@Html.DisplayFor(modelItem => item.IsbnNavigation.Price)</td>
+                        <td>@(item.IsbnNavigation.Price * item.Quantity)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <hr />
+        <div class=" bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
+            <div class="text-right ">
+                <h4> Tổng tiền: @Model.Sum(c => c.IsbnNavigation.Price * c.Quantity) </h4>
+            </div>
+        </div>
+    </div>
+    </div>

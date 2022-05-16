@@ -23,9 +23,9 @@ namespace important1.Controllers
         private readonly UserManager<important1User> _userManager;
 
         public UserBooksController(
-            ILogger<UserBooksController> logger, 
-            IEmailSender emailSender, 
-            UserManager<important1User> userManager, 
+            ILogger<UserBooksController> logger,
+            IEmailSender emailSender,
+            UserManager<important1User> userManager,
             UserContext context)
         {
             _context = context;
@@ -53,7 +53,7 @@ namespace important1.Controllers
         public IActionResult ForAdmin()
         {
             ViewBag.message = "This is for Store Admin only!";
-            return View("Areas/Admin/Views/Home/Index.cshtml");
+            return View("Areas/Admin/Views/Categories/Index.cshtml");
         }
 
 
@@ -66,54 +66,48 @@ namespace important1.Controllers
             var userid = _userManager.GetUserId(HttpContext.User);
             var books = from b in _context.Books
                         select b;
-
             ViewBag.CurrentPage = id;
-
+            books = books.Include(b => b.Category)
+                        .Include(b => b.IdNavigation)
+                        .OrderBy(b => b.Title);
             if (categoryInt != null)
             {
-                books = books.Include(b => b.Category)
-                         .Include(b => b.IdNavigation)
-                         
-                         .Where(b => b.Title.Contains(searchString))
-                         .Where(s => s.CategoryId == categoryInt)
-                         .OrderBy(b => b.Title);
-
-                List<Book> booksList = await books.Skip(id * _recordsPerPage)
-                   .Take(_recordsPerPage).ToListAsync();
-
-                int numOfFilteredBook = books.Count();
-                ViewBag.NumberOfPages = (int)Math.Ceiling((double)numOfFilteredBook / _recordsPerPage);
-
-
-                return View(booksList);
+                books = books.Where(s => s.CategoryId == categoryInt);
             }
 
-            else
+            if (searchString != null)
             {
-                books = books.Include(b => b.Category)
-                          .Include(b => b.IdNavigation)
-                         
-                          .Where(b => b.Title.Contains(searchString))
-                          .OrderBy(b => b.Title);
-                List<Book> booksList = await books.Skip(id * _recordsPerPage)
-                  .Take(_recordsPerPage).ToListAsync();
-
-                int numOfFilteredBook = books.Count();
-                ViewBag.NumberOfPages = (int)Math.Ceiling((double)numOfFilteredBook / _recordsPerPage);
-
-                return View(booksList);
+                books = books.Where(b => b.Title.Contains(searchString));
             }
+            List<Book> booksList = await books.Skip(id * _recordsPerPage)
+                  .Take(_recordsPerPage).ToListAsync();
+            int numOfFilteredBook = books.Count();
+            ViewBag.NumberOfPages = (int)Math.Ceiling((double)numOfFilteredBook / _recordsPerPage);
+            return View(booksList);
         }
- 
+
 
 
         // GET: UserBooks/Details/5
         public async Task<IActionResult> Details(string id, int quantity)
         {
+            var thisUserId = _userManager.GetUserId(HttpContext.User);
             ViewData["quantitytest"] = quantity;
+        
+            Cart fromDb = _context.Carts.FirstOrDefault(c => c.UId == thisUserId && c.BookIsbn == id);
             if (id == null)
             {
                 return NotFound();
+            }
+            if (fromDb == null)
+            {
+
+                TempData["Message"] = "Add to cart  ";
+
+            }
+            else
+            {
+                TempData["Message"] = "Bạn đã chọn";
             }
             var book = await _context.Books
                 .Include(b => b.Carts)
@@ -128,36 +122,32 @@ namespace important1.Controllers
             return View(book);
         }
 
-    
+
 
         public async Task<IActionResult> AddToCart(string isbn, int quantity = 1)
         {
-            
-                var thisUserId = _userManager.GetUserId(HttpContext.User);
-                var userCart = await _context.Books
-                        .FindAsync(isbn);
 
-                Cart myCart = new Cart() 
-                { 
-                    UId = thisUserId,
-                    BookIsbn = isbn, Quantity = quantity, 
-                    TotalPerCart = userCart.Price * quantity 
-                };
-                Cart fromDb = _context.Carts.FirstOrDefault(c => c.UId == thisUserId && c.BookIsbn == isbn);
-                //if not existing (or null), add it to cart. If already added to Cart before, ignore it.
-                if (fromDb == null)
-                {
-                    _context.Add(myCart);
-                    await _context.SaveChangesAsync();
+            var thisUserId = _userManager.GetUserId(HttpContext.User);
+            var userCart = await _context.Books
+                    .FindAsync(isbn);
 
-                }
-                return RedirectToAction("Index");
-                    
-            
+            Cart myCart = new Cart()
+            {
+                UId = thisUserId,
+                BookIsbn = isbn,
+                Quantity = quantity,
+                TotalPerCart = userCart.Price * quantity
+            };
 
-
-
-
+            Cart fromDb = _context.Carts.FirstOrDefault(c => c.UId == thisUserId && c.BookIsbn == isbn);
+            //if not existing (or null), add it to cart. If already added to Cart before, ignore it.
+            if (fromDb == null)
+            {
+                _context.Add(myCart);
+                await _context.SaveChangesAsync();
+            }
+           
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> Checkout()
@@ -220,7 +210,5 @@ namespace important1.Controllers
             ViewData["Id"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
-
-       
     }
 }
