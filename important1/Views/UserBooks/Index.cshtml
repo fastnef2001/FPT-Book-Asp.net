@@ -55,7 +55,9 @@
                     <div class="filter-col1 p-r-15 p-b-27">
                         <form asp-action="Index" method="get">
                             <div>
-                                <select class="mtext-107 cl2 size-105 plh1=2 " asp-items="ViewBag.CategoryId" type="number" name="categoryInt" value="@ViewData["CurrentCate"]"></select>
+                                <select class="mtext-107 cl2 size-105 plh1=2 " asp-items="ViewBag.CategoryId" type="number" name="categoryInt">
+                                     <option disable selected value="all">All</option>
+                                </select>
                                 <input type="submit" value="Filter" class="btn btn-default bg-info text-white p-t-12 " asp-route-id="0" asp-route-categoryInt="@ViewData["CurrentCate"]" />
                             </div>
                         </form>

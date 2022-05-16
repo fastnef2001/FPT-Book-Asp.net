@@ -43,64 +43,29 @@ namespace important1.Areas.Owner.Controllers
                        select b;
 
             ViewBag.CurrentPage = id;
-
+            books = books.Include(b => b.Category)
+                        .Include(b => b.IdNavigation)
+                        .Where(c => c.Id == userid)                       
+                        .OrderBy(b => b.Title);
             if (categoryInt != null)
             {
-                books = books.Include(b => b.Category)
-                         .Include(b => b.IdNavigation)
-                         .Where(c => c.Id == userid)
-                         .Where(b => b.Title.Contains(searchString))
-                         .Where(s => s.CategoryId == categoryInt)
-                         .OrderBy(b => b.Title);
-                
-                List<Book> booksList = await books.Skip(id * _recordsPerPage)
-                   .Take(_recordsPerPage).ToListAsync();
-                int numOfFilteredBook = books.Count();
-                ViewBag.NumberOfPages = (int)Math.Ceiling((double)numOfFilteredBook / _recordsPerPage);
-              
-
-                return View(booksList);
+                books = books.Where(s => s.CategoryId == categoryInt);
             }
 
-            else
+            if(searchString != null)
             {
-                books = books.Include(b => b.Category)
-                          .Include(b => b.IdNavigation)
-                          .Where(c => c.Id == userid)
-                          .Where(b => b.Title.Contains(searchString))
-                          .OrderBy(b => b.Title);
-                List<Book> booksList = await books.Skip(id * _recordsPerPage)
+                books = books.Where(b => b.Title.Contains(searchString));
+            }
+            
+            List<Book> booksList = await books.Skip(id * _recordsPerPage)
                   .Take(_recordsPerPage).ToListAsync();
-
-                int numOfFilteredBook = books.Count();
-                ViewBag.NumberOfPages = (int)Math.Ceiling((double)numOfFilteredBook / _recordsPerPage);
-
-                return View(booksList);
-            }   
+            int numOfFilteredBook = books.Count();
+            ViewBag.NumberOfPages = (int)Math.Ceiling((double)numOfFilteredBook / _recordsPerPage);
+            return View(booksList);
         }
 
 
-        // GET: Owner/Books/Details/5
-        public async Task<IActionResult> Details(string id)
-        {
-
-            ViewData["CategoryId"] = new SelectList(_context.Categories.ToList(), "CategoryId", "Name");
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var book = await _context.Books
-                .Include(b => b.Category)
-                .Include(b => b.IdNavigation)
-                .FirstOrDefaultAsync(m => m.Isbn == id);
-            if (book == null)
-            {
-                return NotFound();
-            }
-
-            return View(book);
-        }
+        
 
         // GET: Owner/Books/Create
         public IActionResult Create()

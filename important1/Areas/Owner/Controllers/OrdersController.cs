@@ -15,12 +15,8 @@ namespace important1.Areas.Owner.Controllers
     [Area("Owner")]
     public class OrdersController : Controller
     {
-        
         private readonly UserContext _context;
         private readonly UserManager<important1User> _userManager;
-
-
-
         public OrdersController(UserContext context, UserManager<important1User> userManager)
         {
             _context = context;
@@ -28,26 +24,21 @@ namespace important1.Areas.Owner.Controllers
         }
 
         // GET: Owner/Orders
-        public async Task<IActionResult> Index(int id = 0)
+        public async Task<IActionResult> Index(int id = 0, string searchString = "")
         {
+            ViewData["CurrentFilter"] = searchString;
             var thisUserId = _userManager.GetUserId(HttpContext.User);
             var orders = from b in _context.Orders
                          select b;
-           
             orders = orders.Include(u => u.IdNavigation).Include(c => c.OrderDetails).ThenInclude(c => c.IsbnNavigation)
-                .Where(d => d.OrderDetails.Where(e => e.IsbnNavigation.Id == thisUserId).Any());
-         
-
+               .Where(d => d.OrderDetails.Where(e => e.IsbnNavigation.Id == thisUserId).Any())
+               .OrderByDescending(r => r.OrderDate);
+            if (searchString != null)
+            {
+                orders = orders.Where(b => b.IdNavigation.UserName.Contains(searchString));
+            }
             List<Order> orderList = await orders.ToListAsync();
-           
-            
             return View(orderList);
-
-
-
-            
         }
-
-       
     }
 }
