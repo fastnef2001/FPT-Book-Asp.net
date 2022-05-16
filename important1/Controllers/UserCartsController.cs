@@ -31,73 +31,15 @@ namespace important1.Controllers
             var userContext = _context.Carts.Include(c => c.Book)
                                             .Include(c => c.User)
                                             .Where(c => c.UId == userid);
-
+            if (userContext.Count() == 0)
+            {
+                return View("/Views/UserCarts/CartEmpty.cshtml");
+            }
 
             return View(await userContext.ToListAsync());
         }
 
-        // GET: UserCarts/Details/5
-        public async Task<IActionResult> Details(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var cart = await _context.Carts
-                .Include(c => c.Book)
-                .Include(c => c.User)
-                .FirstOrDefaultAsync(m => m.UId == id);
-            if (cart == null)
-            {
-                return NotFound();
-            }
-
-            return View(cart);
-        }
-
-        // GET: Carts1/Create
-        public async Task<IActionResult> Create(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var book = await _context.Books
-                .Include(b => b.Category)
-                .Include(b => b.IdNavigation)
-                .FirstOrDefaultAsync(m => m.Isbn == id);
-            if (book == null)
-            {
-                return NotFound();
-            }
-
-            return View(book);
-        }
-
-        // POST: Carts1/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string id, [Bind("Quantity")] Cart cart)
-        {
-            var userid = _userManager.GetUserId(HttpContext.User);
-            if (ModelState.IsValid)
-            {
-                cart.Quantity = 1;
-                cart.BookIsbn = id;
-                cart.UId = userid;
-                _context.Add(cart);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Create));
-            }
-            ViewData["BookIsbn"] = _context.Books.Where(i => i.Isbn == id).FirstOrDefault().Isbn;
-            ViewData["UId"] = _context.Users.Where(c => c.Id == userid).FirstOrDefault().UserName;
-            return View();
-        }
-
+      
         // GET: UserCarts/Edit/5
         public async Task<IActionResult> Edit(string uid, string bid)
         {
@@ -109,11 +51,6 @@ namespace important1.Controllers
             var cart = await _context.Carts
                 .FirstOrDefaultAsync(m => m.UId == uid && m.BookIsbn == bid);
             return View(cart);
-
-
-
-
-
         }
 
         // POST: UserCarts/Edit/5

@@ -33,7 +33,8 @@ namespace important1.Controllers
                          select b;
             
             orders = orders.Include(u => u.IdNavigation).Include(c => c.OrderDetails)
-                .Where(d => d.Id == thisUserId);
+                .Where(d => d.Id == thisUserId)
+                .OrderByDescending(c => c.OrderDate);
 
             List<Order> orderList = await orders.ToListAsync();
           

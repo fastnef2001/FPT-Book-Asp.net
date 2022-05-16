@@ -1,0 +1,38 @@
+﻿@model IEnumerable<important1.Models.Cart>
+
+@{
+    ViewData["Title"] = "Cart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container">
+    <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+        <a asp-area="" asp-controller="UserBooks" asp-action="Index" class="stext-109 cl8 hov-cl1 trans-04">
+            Home
+            <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+        </a>
+
+        <span class="stext-109 cl4">
+            @ViewData["Title"]
+             <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+        </span>
+        <a asp-area="" asp-controller="UserOrders" asp-action="Index" class="stext-109 cl8 hov-cl1 trans-04">
+            Order history
+        </a>
+    </div>
+</div>
+
+
+<!-- Shoping Cart -->
+<form class="bg0 p-t-75 p-b-85>
+    <div class="container">
+
+      <a asp-controller="UserBooks" asp-action="Index"> <h3 style="text-align:center;"> Hay cho sách vào giỏ hàng</h3></a>
+    </div>
+</form>
+
+
+
+
+
